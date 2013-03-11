@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet mobile example</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+  <!--[if lte IE 8]>
+      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+  <![endif]-->
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+		}
+		html, body, #map {
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="map"></div>
+  <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+
+	<script>
+		var map = L.map('map');
+
+		L.tileLayer('http://{s}.tile.cloudmade.com/46283839d4b140f4ae879353d56aa843/89149/256/{z}/{x}/{y}.png', {
+			maxZoom: 18,
+		}).addTo(map);
+		
+
+		var myStyle = {
+		    "color": "#ff7800",
+		    "weight": 5,
+		    "opacity": 0.65
+		};
+
+		function onLocationFound(e) {
+			console.log(e.latlng);
+			// var radius = e.accuracy / 2;
+			// 
+			// L.marker(e.latlng).addTo(map)
+			// 	.bindPopup("You are within " + radius + " meters from this point").openPopup();
+			// 
+			// L.circle(e.latlng, radius).addTo(map);
+			
+			var latlngs = [e.latlng,[31.21533, 121.43695], [31.21609, 121.44066], [31.21451, 121.44133]];
+			
+			// create a red polyline from an arrays of LatLng points
+			var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+			
+			// zoom the map to the polyline
+			map.fitBounds(polyline.getBounds());
+			
+		}
+
+		function onLocationError(e) {
+			alert(e.message);
+		}
+
+		map.on('locationfound', onLocationFound);
+		map.on('locationerror', onLocationError);
+
+		map.locate({setView: true, maxZoom: 16});
+		
+		var popup = L.popup();
+
+		function onMapClick(e) {
+			popup
+				.setLatLng(e.latlng)
+				.setContent("You clicked the map at " + e.latlng.toString())
+				.openOn(map);
+		}
+
+		map.on('click', onMapClick);
+		
+	</script>
+</body>
+</html>
