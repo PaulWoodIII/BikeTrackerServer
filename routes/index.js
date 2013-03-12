@@ -14,7 +14,7 @@ db = new Db('biketrackerdb', server, {safe: true});
 
 db.open(function(err, db) {
     if(!err) {
-        console.log("Connected to 'winedb' database");
+        console.log("Connected to 'biketrackerdb' database");
         db.collection('locations', {safe:true}, function(err, collection) {
             if (err) {
                 console.log("The 'Locations' collection doesn't exist. Creating it with sample data...");
@@ -28,7 +28,31 @@ exports.index = function(req, res){
   res.render('index', { title: 'Bike Tracker' });
 };
 
-exports.resent = function(req, res){
+exports.recentLocation = function(req, res){
+	// Use a timestamp
+    db.collection('locations', function(err, collection) {
+        collection.find().sort( [['_id', -1]] ).limit(30).toArray(function(err, items) {
+            res.send(items);
+        });
+    });
+};
+
+exports.addLocation = function(req, res) {
+    var location = req.body;
+    console.log('Adding location: ' + JSON.stringify(location));
+    db.collection('locations', function(err, collection) {
+        collection.insert(location, {safe:true}, function(err, result) {
+            if (err) {
+                res.send({'error':'An error has occurred'});
+            } else {
+                console.log('Success: ' + JSON.stringify(result[0]));
+                res.send(result[0]);
+            }
+        });
+    });
+}
+
+exports.findAllLocations = function(req, res) {
     db.collection('locations', function(err, collection) {
         collection.find().toArray(function(err, items) {
             res.send(items);

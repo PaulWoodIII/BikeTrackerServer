@@ -22,6 +22,7 @@
 <body>
 	<div id="map"></div>
   <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+	<script src="lib/jquery-1.8.2.min.js" type="text/javascript" charset="utf-8"></script>
 
 	<script>
 		var map = L.map('map');
@@ -39,20 +40,20 @@
 
 		function onLocationFound(e) {
 			console.log(e.latlng);
-			// var radius = e.accuracy / 2;
+			var radius = e.accuracy / 2;
+			
+			L.marker(e.latlng).addTo(map)
+				.bindPopup("You are within " + radius + " meters from this point").openPopup();
+			
+			L.circle(e.latlng, radius).addTo(map);
 			// 
-			// L.marker(e.latlng).addTo(map)
-			// 	.bindPopup("You are within " + radius + " meters from this point").openPopup();
+			// var latlngs = [e.latlng,[31.21533, 121.43695], [31.21609, 121.44066], [31.21451, 121.44133]];
 			// 
-			// L.circle(e.latlng, radius).addTo(map);
-			
-			var latlngs = [e.latlng,[31.21533, 121.43695], [31.21609, 121.44066], [31.21451, 121.44133]];
-			
-			// create a red polyline from an arrays of LatLng points
-			var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
-			
-			// zoom the map to the polyline
-			map.fitBounds(polyline.getBounds());
+			// // create a red polyline from an arrays of LatLng points
+			// var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+			// 
+			// // zoom the map to the polyline
+			// map.fitBounds(polyline.getBounds());
 			
 		}
 
@@ -72,9 +73,24 @@
 				.setLatLng(e.latlng)
 				.setContent("You clicked the map at " + e.latlng.toString())
 				.openOn(map);
-		}
+				$.ajax({
+				  type: "POST",
+				  url: 'addLocation',
+				  data: { lat: e.latlng.lat, lng: e.latlng.lng }
+				});
+			}
 
 		map.on('click', onMapClick);
+		
+		$.get('recentLocation', function(data) {
+			console.log(data);
+			var latlngs = [];
+			jQuery.each(data, function(i, field){
+				latlngs.push(new L.LatLng(field.lat, field.lng));
+			});
+			var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+			map.fitBounds(polyline.getBounds());		
+		});
 		
 	</script>
 </body>

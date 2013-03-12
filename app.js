@@ -1,6 +1,7 @@
 var express = require('express'),
     path = require('path'),
-    http = require('http');
+    http = require('http'),
+		index = require('./routes/index');
 
 var app = express();
 
@@ -10,6 +11,10 @@ app.configure(function () {
     app.use(express.bodyParser()),
     app.use(express.static(path.join(__dirname, 'public')));
 });
+
+app.post('/addLocation', index.addLocation);
+app.get('/recentLocation', index.recentLocation);
+
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log("Express server listening on port " + app.get('port'));
