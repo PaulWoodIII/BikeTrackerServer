@@ -9,5 +9,9 @@
     "express": "3.0.0rc4",
     "mongodb": "1.1.8",
     "socket.io": "0.9.10"
+  },
+  "engines": {
+    "node": "0.8.x",
+    "npm": "1.1.x"
   }
 }
