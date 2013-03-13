@@ -68,19 +68,18 @@
 		
 		var popup = L.popup();
 
-		function onMapClick(e) {
-			popup
-				.setLatLng(e.latlng)
-				.setContent("You clicked the map at " + e.latlng.toString())
-				.openOn(map);
-				$.ajax({
-				  type: "POST",
-				  url: 'addLocation',
-				  data: { lat: e.latlng.lat, lng: e.latlng.lng }
-				});
-			}
-
-		map.on('click', onMapClick);
+		// function onMapClick(e) {
+		// 	popup
+		// 		.setLatLng(e.latlng)
+		// 		.setContent("You clicked the map at " + e.latlng.toString())
+		// 		.openOn(map);
+		// 		$.ajax({
+		// 		  type: "POST",
+		// 		  url: 'addLocation',
+		// 		  data: { lat: e.latlng.lat, lng: e.latlng.lng, hacc: 1.0 }
+		// 		});
+		// 	}
+		//  map.on('click', onMapClick);
 		
 		$.get('recentLocation', function(data) {
 			console.log(data);
