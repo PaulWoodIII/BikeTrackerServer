@@ -6,22 +6,27 @@
 var mongo = require('mongodb');
 
 var Server = mongo.Server,
-    Db = mongo.Db,
-    BSON = mongo.BSONPure;
+   Db = mongo.Db,
+   BSON = mongo.BSONPure;
+
+var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'localhost'; 
 	
-var server = new Server('localhost', 27017, {auto_reconnect: true});
+var server = new Server(mongoUri,27017,{auto_reconnect: true});
 db = new Db('biketrackerdb', server, {safe: true});
 
 db.open(function(err, db) {
-    if(!err) {
-        console.log("Connected to 'biketrackerdb' database");
-        db.collection('locations', {safe:true}, function(err, collection) {
-            if (err) {
-                console.log("The 'Locations' collection doesn't exist. Creating it with sample data...");
-                populateDB();
-            }
-        });
-    }
+   if(!err) {
+       console.log("Connected to 'biketrackerdb' database");
+       db.collection('locations', {safe:true}, function(err, collection) {
+           if (err) {
+               console.log("The 'Locations' collection doesn't exist. Creating it with sample data...");
+               populateDB();
+           }
+       });
+   }
+	 else{
+		 console.log(err);
+	 }
 });
 
 exports.index = function(req, res){
