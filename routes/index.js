@@ -38,7 +38,16 @@ exports.recentLocation = function(req, res){
 };
 
 exports.addLocation = function(req, res) {
-    var location = req.body;
+    var location = {};// = req.body;		
+		if (req.body.lat && req.body.lng && req.body.hacc){
+			location.lat = req.body.lat;
+			location.lng = req.body.lng;
+			location.hacc = req.body.hacc;
+		}
+		else{
+      res.send(404);
+			return;
+		}	
     console.log('Adding location: ' + JSON.stringify(location));
     db.collection('locations', function(err, collection) {
         collection.insert(location, {safe:true}, function(err, result) {
