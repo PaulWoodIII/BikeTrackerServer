@@ -57,6 +57,7 @@ exports.addLocation = function(req, res) {
 			return;
 		}	
     console.log('Adding location: ' + JSON.stringify(location));
+		
 		mongo.connect(uri,function(err,db){
 			if(err) {
 				console.log(err);
@@ -97,8 +98,8 @@ var populateDB = function() {
 
     var locations = [
     {
-        lat: 131.00001,
-        lng: 21.00001,
+        lat: 31.208621,
+        lng: 121.469271,
         alt: 100.0,
         hacc: 50.0,
         vacc: 5.0,
@@ -107,8 +108,8 @@ var populateDB = function() {
         course: 90.0
     },
     {
-        lat: 132.00001,
-        lng: 22.00001,
+        lat: 31.208631,
+        lng: 121.469281,
         alt: 120.0,
         hacc: 51.0,
         vacc: 6.0,
@@ -117,9 +118,13 @@ var populateDB = function() {
         course: 93.0
     }
 	];
-
+	mongo.connect(uri,function(err,db){
+		if(err) {
+			console.log(err);
+			return;
+		}	
     db.collection('locations', function(err, collection) {
         collection.insert(locations, {safe:true}, function(err, result) {});
     });
-
+	});
 };
